@@ -1,7 +1,7 @@
-import { IsNotEmpty, IsUrl } from 'class-validator';
+import { IsNotEmpty, Length } from 'class-validator';
 
 export class DownloadAudio {
   @IsNotEmpty()
-  @IsUrl()
+  @Length(11, 11)
   id: string;
 }

@@ -10,13 +10,18 @@ export class AudioService {
   };
 
   async getDetails(url: string) {
-    const info = await ytdl.getInfo(url);
+    try {
+      const info = await ytdl.getInfo(url);
 
-    return {
-      title: info.videoDetails.title,
-      thumbnail: info.videoDetails.thumbnails[0].url,
-      author: info.videoDetails.author.name,
-    };
+      return {
+        title: info.videoDetails.title,
+        thumbnail: info.videoDetails.thumbnails[0].url,
+        author: info.videoDetails.author.name,
+        id: info.videoDetails.videoId,
+      };
+    } catch (e) {
+      throw new BadRequestException();
+    }
   }
 
   downloadAudio(data: DownloadAudioParams) {
@@ -24,6 +29,7 @@ export class AudioService {
 
     ytdl(`http://youtube.com/watch?v=${id}`, this.ytdlOptions)
       .on('error', (err) => {
+        console.log(err);
         res.status(400).json({
           status: 400,
           message: err.message,
